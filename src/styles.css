@@ -368,8 +368,8 @@
     position: relative;
     display: block;
     flex-shrink: 0;
-    width: 21px;
-    height: 21px;
+    width: 16px;
+    height: 16px;
   }
   .platform-mark {
     position: absolute;
@@ -388,9 +388,9 @@
   }
   .github-lightning {
     position: absolute;
-    inset: -10.5px;
-    width: 42px;
-    height: 42px;
+    inset: -8px;
+    width: 32px;
+    height: 32px;
     overflow: visible;
     pointer-events: none;
     stroke: var(--accent);
@@ -456,11 +456,11 @@
   }
   .bilibili-static {
     position: absolute;
-    top: 6.5px;
-    right: 2.6px;
-    bottom: 3px;
-    left: 2.6px;
-    border-radius: 2px;
+    top: 31%;
+    right: 12.4%;
+    bottom: 14.3%;
+    left: 12.4%;
+    border-radius: 1.5px;
     overflow: hidden;
     background: #dce2ce;
     opacity: 0;
@@ -497,13 +497,13 @@
     --platform-icon: url("/icons/xiaohongshu.svg");
   }
   .xiaohongshu-link .social-icon {
-    width: 25px;
-    height: 25px;
+    width: 19px;
+    height: 19px;
     border: 1px solid currentColor;
-    border-radius: 7px;
+    border-radius: 5px;
   }
   .xiaohongshu-link .platform-mark {
-    inset: 2px;
+    inset: 1px;
   }
   .xiaohongshu-link:is(:hover, :focus-visible) .social-icon {
     animation: social-record-turn 0.85s cubic-bezier(0.22, 0.8, 0.3, 1) both;
