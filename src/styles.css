@@ -335,6 +335,255 @@
   .settings-button {
     color: #7a8175;
   }
+  .social-link {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 8px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    color: #747e68;
+    isolation: isolate;
+    transition:
+      color 0.22s,
+      border-color 0.22s,
+      background 0.22s,
+      transform 0.22s;
+  }
+  .social-link:is(:hover, :focus-visible) {
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    border-color: color-mix(in srgb, var(--accent) 18%, transparent);
+    transform: translateY(-1px);
+  }
+  .social-link:active {
+    transform: translateY(0) scale(0.96);
+  }
+  .social-icon {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 21px;
+    height: 21px;
+  }
+  .platform-mark {
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    mask: var(--platform-icon) center / contain no-repeat;
+  }
+  .github-link {
+    --platform-icon: url("/icons/github.svg");
+    color: #69715f;
+  }
+  .github-link .social-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1px;
+  }
+  .github-lightning {
+    position: absolute;
+    inset: -10.5px;
+    width: 42px;
+    height: 42px;
+    overflow: visible;
+    pointer-events: none;
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(
+      0 0 3px color-mix(in srgb, var(--accent) 40%, transparent)
+    );
+  }
+  .github-lightning path {
+    opacity: 0;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .github-link:is(:hover, :focus-visible) .github-lightning path {
+    animation: social-lightning 1.6s ease-out infinite;
+  }
+  .github-link:is(:hover, :focus-visible) .github-lightning path:nth-child(2) {
+    animation-delay: 0.14s;
+  }
+  .github-link:is(:hover, :focus-visible) .github-lightning path:nth-child(3) {
+    animation-delay: 0.28s;
+  }
+  .social-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    z-index: 4;
+    padding: 8px 10px;
+    border: 1px solid #dcded0;
+    border-radius: 4px;
+    background: #f8f7f1;
+    box-shadow: 0 3px 10px #30352f08;
+    color: #657057;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.4px;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 3px);
+    transition:
+      opacity 0.18s,
+      transform 0.18s;
+  }
+  .social-link:is(:hover, :focus-visible) .social-tooltip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .github-link .social-tooltip {
+    top: calc(100% + 9px);
+    bottom: auto;
+  }
+  .bilibili-link {
+    --platform-icon: url("/icons/bilibili.svg");
+  }
+  .bilibili-link:is(:hover, :focus-visible) {
+    color: #687c53;
+    background: #7d90620c;
+    border-color: #7d90622e;
+  }
+  .bilibili-static {
+    position: absolute;
+    top: 6.5px;
+    right: 2.6px;
+    bottom: 3px;
+    left: 2.6px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: #dce2ce;
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+  .bilibili-static::before,
+  .bilibili-static::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+  .bilibili-static::before {
+    opacity: 0.8;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cfilter id='snow'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Cpath fill='%23647452' filter='url(%23snow)' d='M0 0h48v48H0z'/%3E%3C/svg%3E");
+  }
+  .bilibili-static::after {
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 2px,
+      #354b3766 2px 3px,
+      #f4f2ed80 3px 4px
+    );
+  }
+  .bilibili-link:is(:hover, :focus-visible) .bilibili-static {
+    opacity: 1;
+  }
+  .bilibili-link:is(:hover, :focus-visible) .bilibili-static::before {
+    animation: social-tv-snow 0.28s steps(4, end) infinite;
+  }
+  .bilibili-link:is(:hover, :focus-visible) .bilibili-static::after {
+    animation: social-tv-scan 0.7s linear infinite;
+  }
+  .xiaohongshu-link {
+    --platform-icon: url("/icons/xiaohongshu.svg");
+  }
+  .xiaohongshu-link .social-icon {
+    width: 25px;
+    height: 25px;
+    border: 1px solid currentColor;
+    border-radius: 7px;
+  }
+  .xiaohongshu-link .platform-mark {
+    inset: 2px;
+  }
+  .xiaohongshu-link:is(:hover, :focus-visible) .social-icon {
+    animation: social-record-turn 0.85s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+  }
+  @keyframes social-lightning {
+    0%,
+    8% {
+      opacity: 0;
+      stroke-dashoffset: 1;
+    }
+    25%,
+    38% {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+    44% {
+      opacity: 0.2;
+    }
+    52% {
+      opacity: 1;
+      stroke-dashoffset: 0;
+    }
+    74%,
+    100% {
+      opacity: 0;
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes social-tv-snow {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(5px, -3px);
+    }
+    50% {
+      transform: translate(-4px, 5px);
+    }
+    75% {
+      transform: translate(3px, 2px);
+    }
+  }
+  @keyframes social-tv-scan {
+    to {
+      transform: translateY(4px);
+    }
+  }
+  @keyframes social-record-turn {
+    0% {
+      transform: rotate(0);
+    }
+    78% {
+      transform: rotate(375deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  .reduced-motion .social-link *,
+  .reduced-motion .social-link *::before,
+  .reduced-motion .social-link *::after {
+    animation: none !important;
+  }
+  .reduced-motion .github-lightning,
+  .reduced-motion .bilibili-static {
+    display: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .social-link,
+    .social-link *,
+    .social-link *::before,
+    .social-link *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    .github-lightning,
+    .bilibili-static {
+      display: none;
+    }
+  }
   .import-button {
     display: flex;
     align-items: center;
@@ -1026,6 +1275,34 @@
     color: #a4ad95;
     font-size: 9px;
     letter-spacing: 0.3px;
+    gap: 20px;
+  }
+  .footer-connections {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .social-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .social-caption {
+    margin-right: 7px;
+    color: #8a957c;
+    font-size: 9px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+  .social-links .social-label {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .footer-connection-divider {
+    width: 1px;
+    height: 14px;
+    background: var(--line);
   }
   .site-footer > span:first-child {
     display: flex;
@@ -4416,6 +4693,12 @@
     .header-actions {
       gap: 10px;
     }
+    .github-link {
+      padding: 0;
+    }
+    .github-link .social-label {
+      display: none;
+    }
     .main-nav {
       gap: 20px;
     }
@@ -4500,6 +4783,9 @@
       font-size: 7px;
     }
     .keyboard-hint {
+      display: none;
+    }
+    .footer-connection-divider {
       display: none;
     }
     .site-footer {
@@ -4775,6 +5061,9 @@
       justify-content: center;
       min-height: 62px;
       font-size: 9px;
+      flex-direction: column;
+      gap: 5px;
+      padding: 14px 0 18px;
     }
     .audio-error {
       font-size: 10px;
@@ -4916,8 +5205,15 @@
     .brand-name {
       font-size: 19px;
     }
+    .header-actions {
+      gap: 5px;
+    }
+    .github-link {
+      min-width: 28px;
+    }
     .import-button {
       font-size: 10px;
+      padding-inline: 8px;
     }
     .current-cover {
       width: 39px;

@@ -1,0 +1,10 @@
+GitHub, Bilibili, and Xiaohongshu icons
+
+Source: Simple Icons
+https://github.com/simple-icons/simple-icons
+
+The SVG icon artwork is distributed under CC0 1.0:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Brand names and logos are trademarks of their respective owners.
+Their inclusion identifies external links and does not imply endorsement.

@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { DeviceStage } from "./components/DeviceStage";
 import { Modal } from "./components/Modal";
+import { SocialLink } from "./components/SocialLink";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import {
   DEMO_TRACKS,
@@ -636,6 +637,7 @@ export default function App() {
             </button>
           </nav>
           <div className="header-actions">
+            <SocialLink platform="github" />
             <button
               className="icon-button settings-button"
               onClick={() => setModal("settings")}
@@ -982,13 +984,21 @@ export default function App() {
               A LITTLE USELESS. A LOT OF FEELING.
             </span>
           </span>
-          <span className="keyboard-hint">
-            <kbd>space</kbd>播放 / 暂停<span className="footer-dot">·</span>
-            <button onClick={() => setModal("about")}>
-              慢慢听
-              <ArrowUpRight size={12} />
-            </button>
-          </span>
+          <div className="footer-connections">
+            <nav className="social-links" aria-label="在别处找到作者">
+              <span className="social-caption">保持同频</span>
+              <SocialLink platform="bilibili" />
+              <SocialLink platform="xiaohongshu" />
+            </nav>
+            <span className="footer-connection-divider" aria-hidden="true" />
+            <span className="keyboard-hint">
+              <kbd>space</kbd>播放 / 暂停<span className="footer-dot">·</span>
+              <button onClick={() => setModal("about")}>
+                慢慢听
+                <ArrowUpRight size={12} />
+              </button>
+            </span>
+          </div>
         </footer>
       </div>
       {toast && (
