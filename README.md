@@ -35,6 +35,31 @@ npm run preview      # 在本机预览生产构建
 npm run format:check # 检查代码格式
 ```
 
+## 服务器部署
+
+声物是纯静态网站。服务器只需提供构建后的 HTML、JavaScript、CSS 和静态素材；音乐解析、播放和本地保存都在访问者的浏览器中完成。
+
+从源码构建时，在安装了 Node.js 的机器上执行：
+
+```sh
+npm ci
+npm test
+npm run build
+```
+
+将 **`dist/` 里面的全部文件** 上传到网站根目录，例如 `/var/www/sonic-relics/`，使 `index.html` 直接位于该目录。生产包已经包含字体、图标、七段演示音频、封面、项目许可证和第三方许可说明；服务器运行静态文件时不需要安装 Node.js 或项目依赖。
+
+默认按域名根路径 `/` 部署，例如 `https://music.example.com/`。使用 Nginx 时可参考 [deploy/nginx.conf](./deploy/nginx.conf)，将示例域名和网站目录替换为实际值，检查配置后重新加载：
+
+```sh
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+请为正式域名启用 **HTTPS**，可通过服务器面板、反向代理或 Nginx 配置证书。本地音乐导入使用 `crypto.subtle` 计算文件指纹，需要安全上下文；`http://localhost` 和 `http://127.0.0.1` 是本地调试例外。Nginx 示例提供 HTTP 静态服务部分，证书与 HTTPS 配置按服务器实际环境设置。
+
+部署完成后检查页面、演示曲播放和本地音乐导入。音乐库属于访问者使用的浏览器与站点来源；从本地地址迁移到正式域名后，需在正式网站重新导入音乐。
+
 ## 先玩什么
 
 1. 按磁带机的 PLAY，播放默认的《晚风来信》。
@@ -130,4 +155,4 @@ npm run format:check # 检查代码格式
 
 第三方依赖、图标和字体继续适用各自的许可证。六段历史演示音频及对应历史封面曾按 **CC0 1.0** 授权，仍保留该授权；新增的黑胶演示音频与封面采用本项目的署名—非商业许可，具体文件见[音频与素材许可说明](./public/audio/LICENSE.txt)。用户导入的音乐与封面版权归各自权利人。
 
-`npm run build` 会把项目 `LICENSE` 和 `NOTICE` 一并复制到 `dist/`，素材声明也随 `public/` 进入构建目录。再发布源码、打包文件或部署修改版时，请保留这些许可与署名信息。
+`npm run build` 会把项目 `LICENSE` 和 `NOTICE` 一并复制到 `dist/`，素材声明也随 `public/` 进入构建目录；打包依赖与字体的许可正文汇总到 `THIRD_PARTY_LICENSES.txt`。再发布源码、打包文件或部署修改版时，请保留这些许可与署名信息。
