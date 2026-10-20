@@ -7,7 +7,25 @@ const SR = 24000;
 const destination = path.resolve("public/audio");
 fs.mkdirSync(destination, { recursive: true });
 const pieces = [
-  { id: "radio", bpm: 92, voice: "keys", gain: 0.85, seed: 16, shift: -12 },
+  {
+    id: "radio",
+    bpm: 92,
+    voice: "keys",
+    gain: 0.85,
+    seed: 16,
+    shift: -12,
+    swing: 0.09,
+  },
+  {
+    id: "vinyl",
+    bpm: 96,
+    voice: "rhodes",
+    gain: 0.78,
+    seed: 73,
+    shift: 0,
+    swing: 0.11,
+    surfaceNoise: true,
+  },
   { id: "cassette", bpm: 86, voice: "pad", gain: 0.7, seed: 84, shift: 0 },
   { id: "cd", bpm: 94, voice: "keys", gain: 0.7, seed: 96, shift: 0 },
   { id: "mp3", bpm: 108, voice: "chip", gain: 0.5, seed: 2, shift: 12 },
@@ -67,7 +85,18 @@ for (const piece of pieces) {
       else if (voice === "bass")
         wave =
           (Math.sin(phase) + 0.2 * Math.sin(phase * 2)) * Math.exp(-t * 2.2);
-      else
+      else if (voice === "rhodes") {
+        // A soft electric-piano tone: light FM bell over a sine body, with tremolo.
+        const tremolo =
+          1 + 0.12 * Math.sin(2 * Math.PI * 5.2 * ((offset + i) / SR));
+        wave =
+          (Math.sin(phase + 0.9 * Math.exp(-t * 3) * Math.sin(phase)) * 0.82 +
+            0.18 *
+              Math.sin(phase * 2 + Math.sin(phase) * 1.4 * Math.exp(-t * 6)) *
+              Math.exp(-t * 4)) *
+          Math.exp(-t * 1.25) *
+          tremolo;
+      } else
         wave =
           Math.sin(phase) * Math.exp(-t * 5) +
           0.38 * Math.sin(phase * 2) * Math.exp(-t * 8);
@@ -115,7 +144,7 @@ for (const piece of pieces) {
         const at =
           start +
           (step * beat) / 2 +
-          (step % 2 && piece.id === "radio" ? beat * 0.09 : 0);
+          (step % 2 ? beat * (piece.swing ?? 0) : 0);
         addTone(
           note,
           at,
@@ -147,6 +176,35 @@ for (const piece of pieces) {
   const delay = Math.floor(beat * 0.75 * SR);
   for (let i = delay; i < buffer.length; i++)
     buffer[i] += buffer[i - delay] * (piece.id === "stream" ? 0.22 : 0.1);
+  if (piece.surfaceNoise) {
+    // Synthesised record-surface character for this demo only: low hiss, sparse
+    // dust pops and a faint tick once per 33⅓ rpm revolution. Imported music is
+    // never filtered; this texture is part of the original sketch itself.
+    let noiseState = 1972;
+    const noise = () => {
+      noiseState = (noiseState * 1103515245 + 12345) >>> 0;
+      return noiseState / 4294967296;
+    };
+    let hiss = 0;
+    for (let i = 0; i < buffer.length; i++) {
+      hiss += (noise() * 2 - 1 - hiss) * 0.08;
+      buffer[i] += hiss * 0.014;
+      if (noise() < 6 / SR) {
+        const size = 0.012 + noise() ** 3 * 0.05;
+        const length = Math.floor(SR * (0.0006 + noise() * 0.0016));
+        for (let k = 0; k < length && i + k < buffer.length; k++)
+          buffer[i + k] +=
+            size * (noise() * 2 - 1) * Math.exp(-k / (length * 0.35));
+      }
+    }
+    const revolution = 60 / (100 / 3);
+    for (let at = 0.37; at < duration; at += revolution) {
+      const offset = Math.floor(at * SR);
+      for (let k = 0; k < SR * 0.004 && offset + k < buffer.length; k++)
+        buffer[offset + k] +=
+          0.018 * Math.sin(k * 0.9) * Math.exp(-k / (SR * 0.0012));
+    }
+  }
   let peak = 0;
   for (let i = 0; i < buffer.length; i++) {
     const fade = Math.min(1, i / (SR * 0.12), (buffer.length - i) / (SR * 2.5));

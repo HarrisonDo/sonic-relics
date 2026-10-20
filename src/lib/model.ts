@@ -1,5 +1,13 @@
 export type EraId =
-  "radio" | "cassette" | "cd" | "mp3" | "ipod" | "mp4" | "stream" | "relic";
+  | "radio"
+  | "vinyl"
+  | "cassette"
+  | "cd"
+  | "mp3"
+  | "ipod"
+  | "mp4"
+  | "stream"
+  | "relic";
 export type YearSource = "demo" | "original" | "tag" | "manual" | "unknown";
 export type RepeatMode = "all" | "one" | "off";
 
@@ -46,14 +54,27 @@ export const ERAS: Era[] = [
     id: "radio",
     label: "收音机",
     english: "RADIO DAYS",
-    yearLabel: "1960s",
-    year: "1967",
-    period: "— 1979",
+    yearLabel: "1950s",
+    year: "1957",
+    period: "— 1959",
     headline: ["世界很大，", "声音很近。"],
     caption: "转动旋钮，让远方的声音抵达此刻。",
-    note: "一段频率，一个时代",
+    note: "转动调谐旋钮，在电台之间换一首歌",
     accent: "#946744",
     number: "01",
+  },
+  {
+    id: "vinyl",
+    label: "黑胶唱机",
+    english: "THE GROOVE YEARS",
+    yearLabel: "1960s",
+    year: "1972",
+    period: "1960 — 1979",
+    headline: ["唱针落下，", "旧日醒来。"],
+    caption: "细细的纹路里，刻着一整个年代的心跳。",
+    note: "把唱臂移到唱片上，落针即播放",
+    accent: "#a07c3c",
+    number: "02",
   },
   {
     id: "cassette",
@@ -64,9 +85,9 @@ export const ERAS: Era[] = [
     period: "1980 — 1989",
     headline: ["把时光，", "轻轻倒带。"],
     caption: "那些舍不得快进的日子，都藏在这一面。",
-    note: "按下 PLAY，让记忆转动",
+    note: "按下 PLAY；按住 REW / FF 快速卷带",
     accent: "#cf593b",
-    number: "02",
+    number: "03",
   },
   {
     id: "cd",
@@ -77,9 +98,9 @@ export const ERAS: Era[] = [
     period: "1990 — 1999",
     headline: ["一圈一圈，", "转回从前。"],
     caption: "光落在银色唱片上，折射出整个夏天。",
-    note: "轻触舱盖，打开一段声音",
+    note: "打开舱盖换一张碟，合上就播放",
     accent: "#647c87",
-    number: "03",
+    number: "04",
   },
   {
     id: "mp3",
@@ -90,9 +111,9 @@ export const ERAS: Era[] = [
     period: "2000 — 2004",
     headline: ["整个世界，", "装进口袋。"],
     caption: "小小的屏幕，存着一整个青春。",
-    note: "用方向键，找到下一段心情",
+    note: "方向键切歌，按住快进快退",
     accent: "#5a776c",
-    number: "04",
+    number: "05",
   },
   {
     id: "ipod",
@@ -103,9 +124,9 @@ export const ERAS: Era[] = [
     period: "2005 — 2012",
     headline: ["指尖一转，", "就是远方。"],
     caption: "白色耳机线，连着只属于你的世界。",
-    note: "滑动转盘挑选，中心键播放",
+    note: "MENU 里转盘选曲；播放界面转盘调音量",
     accent: "#a17b57",
-    number: "05",
+    number: "06",
   },
   {
     id: "mp4",
@@ -116,9 +137,9 @@ export const ERAS: Era[] = [
     period: "2005 — 2012",
     headline: ["第一次，", "看见声音。"],
     caption: "在一块小彩屏里，把喜欢放到最大。",
-    note: "轻触屏幕，切换封面与声波",
+    note: "轻触屏幕切换封面与声波，也可以全屏观看",
     accent: "#726f95",
-    number: "06",
+    number: "07",
   },
   {
     id: "stream",
@@ -129,9 +150,9 @@ export const ERAS: Era[] = [
     period: "2013 — NOW",
     headline: ["声音无形，", "情绪有迹。"],
     caption: "让音乐自由流淌，在此刻泛起涟漪。",
-    note: "每一道波纹，都来自正在播放的声音",
+    note: "拖动外圈调整进度，轻触泛起涟漪",
     accent: "#497f83",
-    number: "07",
+    number: "08",
   },
   {
     id: "relic",
@@ -142,9 +163,9 @@ export const ERAS: Era[] = [
     period: "AN IMAGINED FUTURE",
     headline: ["下一首，", "在脑海里。"],
     caption: "如果记忆可以接入，音乐会抵达哪里？",
-    note: "接入芯片，让声音沿神经生长",
+    note: "把芯片推进接口，让声音沿神经生长",
     accent: "#a46858",
-    number: "08",
+    number: "09",
   },
 ];
 
@@ -167,11 +188,22 @@ export const DEMO_TRACKS: Track[] = [
     id: "demo-radio",
     title: "午后三点的广播",
     artist: "声物声音实验室",
-    year: 1967,
+    year: 1957,
     yearSource: "demo",
     duration: 0,
     src: "/audio/radio.wav",
     cover: "/artworks/radio.svg",
+    isDemo: true,
+  },
+  {
+    id: "demo-vinyl",
+    title: "黄昏舞池",
+    artist: "声物声音实验室",
+    year: 1972,
+    yearSource: "demo",
+    duration: 0,
+    src: "/audio/vinyl.wav",
+    cover: "/artworks/vinyl.svg",
     isDemo: true,
   },
   {
@@ -273,17 +305,19 @@ export function eraForYear(
   if (parseYear(year) === null) return UNKNOWN_ERA;
   const y = year as number;
   const id: EraId =
-    y < 1980
+    y < 1960
       ? "radio"
-      : y < 1990
-        ? "cassette"
-        : y < 2000
-          ? "cd"
-          : y < 2005
-            ? "mp3"
-            : y < 2013
-              ? digitalDefault
-              : "stream";
+      : y < 1980
+        ? "vinyl"
+        : y < 1990
+          ? "cassette"
+          : y < 2000
+            ? "cd"
+            : y < 2005
+              ? "mp3"
+              : y < 2013
+                ? digitalDefault
+                : "stream";
   return ERAS.find((era) => era.id === id)!;
 }
 

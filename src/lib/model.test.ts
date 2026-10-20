@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   DEMO_TRACKS,
+  ERAS,
   createQueueOrder,
   eraForYear,
   formatTime,
@@ -39,7 +40,10 @@ test("invalid original tags fall back to release tags without guessing", () => {
 
 test("era boundaries and overlapping digital formats match the plan", () => {
   const expected = [
-    [1979, "radio"],
+    [1877, "radio"],
+    [1959, "radio"],
+    [1960, "vinyl"],
+    [1979, "vinyl"],
     [1980, "cassette"],
     [1989, "cassette"],
     [1990, "cd"],
@@ -53,7 +57,30 @@ test("era boundaries and overlapping digital formats match the plan", () => {
   for (const [year, era] of expected) assert.equal(eraForYear(year).id, era);
   assert.equal(eraForYear(2008, "mp4").id, "mp4");
   assert.equal(eraForYear(1996, "mp4").id, "cd");
+  assert.equal(eraForYear(1972, "mp4").id, "vinyl");
   assert.equal(eraForYear(2077).id, "unknown");
+});
+
+test("the timeline lists nine carriers in order with sequential exhibit numbers", () => {
+  assert.deepEqual(
+    ERAS.map((era) => era.id),
+    [
+      "radio",
+      "vinyl",
+      "cassette",
+      "cd",
+      "mp3",
+      "ipod",
+      "mp4",
+      "stream",
+      "relic",
+    ],
+  );
+  ERAS.forEach((era, index) =>
+    assert.equal(era.number, String(index + 1).padStart(2, "0")),
+  );
+  for (const demo of DEMO_TRACKS)
+    assert.notEqual(eraForYear(demo.year).id, "unknown");
 });
 
 test("only real four-digit dates are accepted; invalid input never selects the future", () => {
@@ -79,7 +106,7 @@ test("only real four-digit dates are accepted; invalid input never selects the f
 });
 
 test("a manual year can correct or explicitly clear metadata without changing the audio", () => {
-  const track = DEMO_TRACKS[1];
+  const track = DEMO_TRACKS.find((item) => item.id === "demo-cassette")!;
   const corrected = withYearOverride(track, { [track.id]: 1996 });
   assert.equal(corrected.year, 1996);
   assert.equal(corrected.yearSource, "manual");

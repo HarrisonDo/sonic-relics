@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import type { MutableRefObject } from "react";
 import type { AudioPlayer } from "../hooks/useAudioPlayer";
 
 interface WaveCanvasProps {
@@ -6,6 +7,8 @@ interface WaveCanvasProps {
   reducedMotion: boolean;
   mode?: "orb" | "bars" | "neural";
   className?: string;
+  /** Receives a function that sends a touch ripple through the orb from (x, y). */
+  rippleRef?: MutableRefObject<((x: number, y: number) => void) | null>;
 }
 
 export function WaveCanvas({
@@ -13,6 +16,7 @@ export function WaveCanvas({
   reducedMotion,
   mode = "orb",
   className = "",
+  rippleRef,
 }: WaveCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const readSpectrum = player.readSpectrum;
@@ -41,6 +45,14 @@ export function WaveCanvas({
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
     resize();
+    // Touch ripples are interaction feedback, separate from the audio response.
+    const ripples: Array<{ x: number; y: number; born: number }> = [];
+    if (rippleRef)
+      rippleRef.current = (x, y) => {
+        if (reducedMotion) return;
+        if (ripples.length > 4) ripples.shift();
+        ripples.push({ x, y, born: performance.now() });
+      };
     const draw = (now: number) => {
       const signal = readSpectrum(data);
       amplitude += (signal - amplitude) * 0.16;
@@ -125,6 +137,16 @@ export function WaveCanvas({
         gradient.addColorStop(0.52, "rgba(98, 139, 139, .9)");
         gradient.addColorStop(1, "rgba(174, 131, 97, .54)");
         context.strokeStyle = gradient;
+        while (ripples.length && now - ripples[0].born > 1600) ripples.shift();
+        const waves = ripples.map((ripple) => {
+          const age = (now - ripple.born) / 1000;
+          return {
+            x: ripple.x,
+            y: ripple.y,
+            front: age * 230,
+            strength: (1 - age / 1.6) * 11,
+          };
+        });
         for (let ring = 0; ring < 42; ring++) {
           context.beginPath();
           const depth = ring / 41;
@@ -139,11 +161,20 @@ export function WaveCanvas({
               ? 1
               : 1 + amplitude * 0.09 + frequency * 0.04;
             const r = radius * (0.29 + depth * 0.71) * contour * signalScale;
-            const x = centerX + Math.cos(angle) * r;
-            const y =
+            let x = centerX + Math.cos(angle) * r;
+            let y =
               centerY +
               Math.sin(angle) * r * 0.88 +
               Math.cos(angle * 2 + depth * 2) * radius * 0.07;
+            for (const wave of waves) {
+              const dx = x - wave.x;
+              const dy = y - wave.y;
+              const distance = Math.hypot(dx, dy) || 1;
+              const bump =
+                Math.exp(-((distance - wave.front) ** 2) / 900) * wave.strength;
+              x += (dx / distance) * bump;
+              y += (dy / distance) * bump;
+            }
             if (point === 0) context.moveTo(x, y);
             else context.lineTo(x, y);
           }
@@ -151,6 +182,22 @@ export function WaveCanvas({
           context.globalAlpha = 0.25 + Math.sin(depth * Math.PI) * 0.7;
           context.lineWidth = 0.68 + amplitude * 0.4;
           context.stroke();
+        }
+        for (const wave of waves) {
+          context.globalAlpha = Math.max(0, wave.strength / 11) * 0.42;
+          context.lineWidth = 1;
+          context.strokeStyle = "rgba(87, 132, 131, 1)";
+          for (const scale of [1, 0.72]) {
+            context.beginPath();
+            context.arc(
+              wave.x,
+              wave.y,
+              Math.max(1, wave.front * scale),
+              0,
+              Math.PI * 2,
+            );
+            context.stroke();
+          }
         }
         context.globalAlpha = 1;
       }
@@ -160,8 +207,9 @@ export function WaveCanvas({
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      if (rippleRef) rippleRef.current = null;
     };
-  }, [readSpectrum, reducedMotion, mode]);
+  }, [readSpectrum, reducedMotion, mode, rippleRef]);
 
   return (
     <canvas

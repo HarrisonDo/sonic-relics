@@ -29,6 +29,7 @@ import {
   SlidersHorizontal,
   Sparkles,
   Trash2,
+  Turntable,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -61,6 +62,7 @@ import {
 
 const ERA_ICONS = {
   radio: Radio,
+  vinyl: Turntable,
   cassette: CassetteTape,
   cd: Disc3,
   mp3: Music2,
@@ -365,7 +367,9 @@ export default function App() {
     .map((id) => tracks.find((item) => item.id === id))
     .filter((item): item is Track => !!item);
   const track =
-    tracks.find((item) => item.id === currentId) ?? tracks[1] ?? tracks[0];
+    tracks.find((item) => item.id === currentId) ??
+    tracks.find((item) => item.id === "demo-cassette") ??
+    tracks[0];
   tracksRef.current = rawTracks;
   const endedRef = useRef<() => void>(() => undefined);
   const player = useAudioPlayer(track, preferences, () => endedRef.current());
@@ -719,7 +723,7 @@ export default function App() {
                 </span>
                 <span className="exhibit-count">
                   {era.number}
-                  <span> / 08</span>
+                  <span> / {String(ERAS.length).padStart(2, "0")}</span>
                 </span>
               </div>
               <DeviceStage
@@ -1154,13 +1158,13 @@ export default function App() {
             <span>声物</span>
           </div>
           <p className="about-copy">
-            我们记住一首歌，有时也记住了播放它的那台机器。按下的磁带键，划过唱片的光，还有口袋里缠成一团的耳机线。
+            我们记住一首歌，有时也记住了播放它的那台机器。落下的唱针，按下的磁带键，划过光盘的光，还有口袋里缠成一团的耳机线。
           </p>
           <p className="about-copy">
             声物是一座小小的声音博物馆。让音乐回到它的年代，也让你自由地穿越过去与未来。
           </p>
           <div className="about-note">
-            <strong>先从六段声音开始</strong>
+            <strong>先从七段声音开始</strong>
             <p>
               内置音乐是为声物创作的器乐片段。标注年份为演示场景，不是历史发行年份。导入自己的音乐后，播放器会读取文件中的年份；你也可以随时修正。
             </p>
@@ -1177,6 +1181,34 @@ export default function App() {
               <kbd>M</kbd> 静音
             </span>
           </div>
+          <p className="about-copy">
+            © 2026{" "}
+            <a
+              href="https://github.com/HarrisonDo"
+              target="_blank"
+              rel="noreferrer"
+            >
+              HarrisonDo
+            </a>
+            {" · "}
+            <a
+              href="https://github.com/HarrisonDo/sonic-relics"
+              target="_blank"
+              rel="noreferrer"
+            >
+              声物 / SONIC RELICS
+            </a>
+            <br />
+            允许非商业用途的下载、Fork、修改与再发布，须保留作者署名。
+            商业用途需事先取得作者书面授权。
+            <a
+              href="https://github.com/HarrisonDo/sonic-relics/blob/main/LICENSE"
+              target="_blank"
+              rel="noreferrer"
+            >
+              查看完整许可
+            </a>
+          </p>
           <button
             className="solid-button wide-button"
             onClick={() => setModal(null)}

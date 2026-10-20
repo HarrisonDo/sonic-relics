@@ -1,0 +1,92 @@
+Sonic Relics Attribution-NonCommercial License 1.0
+
+Copyright (c) 2026 HarrisonDo
+Project: 声物 / SONIC RELICS
+Source: https://github.com/HarrisonDo/sonic-relics
+
+1. Scope
+
+This license applies to the original source code, documentation, designs, and
+other original materials in this project (the "Material"), to the extent that
+HarrisonDo (the "Licensor") owns or can license them, except where a different
+license is expressly identified. Third-party components and the legacy CC0
+assets listed in public/audio/LICENSE.txt retain their respective licenses.
+
+2. Noncommercial permission
+
+Subject to the conditions below, the Licensor grants you a worldwide,
+royalty-free, non-exclusive license to download, clone, fork, use, run, copy,
+modify, and redistribute the Material, including modified versions, in source
+or compiled form, solely for noncommercial purposes. You may publicly host a
+noncommercial version under the same conditions.
+
+3. Attribution and redistribution
+
+Whenever you redistribute any substantial portion of the Material, including
+within a modified version or compiled application, you must:
+
+  a. Retain the copyright notice, this license in full, and the attribution in
+     NOTICE. Include them in the source distribution or in the documentation
+     or other materials accompanying a compiled distribution.
+  b. Credit "HarrisonDo" as the original author of "Sonic Relics / 声物" and
+     include https://github.com/HarrisonDo/sonic-relics in a reasonably visible
+     location, such as a README, credits page, or About dialog. A publicly
+     hosted application must make this attribution accessible to its users.
+  c. Clearly identify material changes you made, without implying that the
+     Licensor created or endorses your changes or your version.
+  d. Keep the Material covered by this license, including the noncommercial
+     restriction, when distributing it as part of a derivative work. You may
+     license your own original additions separately, provided those terms do
+     not remove or override the conditions applying to the Material.
+
+4. Commercial use requires separate written authorization
+
+Commercial use means use primarily intended for or directed toward commercial
+advantage or monetary compensation. It includes selling or renting the
+Material or a modified version; paid downloads, paid access, or subscriptions;
+advertising-supported or sponsored services using the Material; incorporating
+the Material into a commercial product or service; paid client work using the
+Material; and use in the internal business operations of a for-profit entity.
+Making a copy or service available free of charge does not, by itself, make
+an otherwise commercial use noncommercial.
+
+No commercial rights are granted by this license. Before any commercial use,
+you must obtain a separate written license or authorization from the Licensor.
+Request authorization through the repository's Issues page or by contacting
+HarrisonDo through the GitHub profile:
+https://github.com/HarrisonDo
+https://github.com/HarrisonDo/sonic-relics/issues
+
+Submitting a request or receiving no response does not grant authorization.
+The Licensor may grant separate commercial licenses on different terms.
+
+5. Other rights and existing licenses
+
+This license does not grant trademark rights or permission to imply endorsement.
+It does not restrict rights you have under applicable copyright exceptions or
+under a separate valid license. It does not revoke any prior CC0 dedication or
+other rights already granted for earlier versions or separately licensed
+materials. Imported user audio is not licensed by this project.
+
+6. Termination
+
+Your rights under this license terminate automatically if you breach its
+conditions. Termination does not limit any other remedies available to the
+Licensor. Rights granted to compliant recipients are not terminated solely
+because a distributor violated this license.
+
+7. Disclaimer
+
+TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, THE MATERIAL IS PROVIDED
+"AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE LICENSOR OR CONTRIBUTORS
+BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+MATERIAL OR ITS USE OR OTHER DEALINGS IN THE MATERIAL.
+
+中文摘要（完整许可条款以以上英文正文为准）：
+允许非商业用途的下载、Fork、使用、修改和再发布，包括修改后的版本及构建产物。
+再发布必须保留完整许可证、NOTICE、HarrisonDo 的作者署名及原仓库链接，并注明修改。
+商业用途必须事先取得 HarrisonDo 的单独书面授权。
+第三方组件与已按 CC0 授权的历史素材仍适用各自许可，详见素材许可声明。

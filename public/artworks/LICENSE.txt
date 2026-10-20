@@ -1,0 +1,14 @@
+Sonic Relics — original artwork
+
+Copyright (c) 2026 HarrisonDo
+Source: https://github.com/HarrisonDo/sonic-relics
+
+vinyl.svg is provided under the Sonic Relics Attribution-NonCommercial
+License 1.0. See LICENSE and NOTICE at the repository/build root.
+
+radio.svg, cassette.svg, cd.svg, mp3.svg, ipod.svg, stream.svg, and local.svg
+remain available under CC0 1.0:
+https://creativecommons.org/publicdomain/zero/1.0/
+
+For the complete asset licensing details, see public/audio/LICENSE.txt
+(audio/LICENSE.txt in a production build).
