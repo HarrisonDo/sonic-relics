@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="UTF-8" /><meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  /><title>声物 — 本地导入验证</title>
+  <style>
+    body {
+      font: 15px/1.8 system-ui;
+      max-width: 850px;
+      padding: 40px;
+      margin: auto;
+      background: #f4f2ed;
+      color: #34452d;
+    }
+    button {
+      padding: 12px 20px;
+      background: #43553a;
+      color: white;
+      border: 0;
+      border-radius: 5px;
+      font: inherit;
+    }
+    pre {
+      white-space: pre-wrap;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    a {
+      color: #925435;
+    }
+  </style>
+  <h1>声物 · 本地文件解析与存储验证</h1>
+  <p>
+    开发验证页。使用项目生成的音频样本，调用与播放器相同的导入和存储模块。此页面不参与生产构建。
+  </p>
+  <p>
+    验证 WAV 年份、MP3 年份、标准 ID3
+    原始发行年份、未知年份，以及无法解码的文件。
+  </p>
+  <button id="run">验证并收录测试样本</button>
+  <button id="cleanup">清理这五个测试样本</button>
+  <a href="/">返回播放器</a>
+  <pre id="result" role="status">等待运行。</pre>
+  <script type="module">
+    import { importAudio } from "/src/lib/importAudio.ts";
+    import {
+      deleteSavedTrack,
+      readLocal,
+      saveTrack,
+      writeLocal,
+    } from "/src/lib/storage.ts";
+    const samples = [
+      ["tagged-1986.wav", "audio/wav"],
+      ["tagged-2002.mp3", "audio/mpeg"],
+      ["reissue-1986.mp3", "audio/mpeg"],
+      ["unknown-year.wav", "audio/wav"],
+      ["invalid.wav", "audio/wav"],
+    ];
+    async function readSample(name, type) {
+      const response = await fetch("./fixtures/" + name);
+      if (!response.ok) throw new Error(name + "：未找到测试文件");
+      return importAudio(new File([await response.blob()], name, { type }));
+    }
+    function setBusy(busy) {
+      document.querySelector("#run").disabled = busy;
+      document.querySelector("#cleanup").disabled = busy;
+    }
+    document.querySelector("#run").addEventListener("click", async () => {
+      const output = document.querySelector("#result");
+      setBusy(true);
+      output.textContent = "正在验证…";
+      const results = [];
+      try {
+        for (const [name, type] of samples) {
+          const track = await readSample(name, type);
+          await saveTrack(track);
+          results.push({
+            file: name,
+            title: track.title,
+            year: track.year,
+            source: track.yearSource,
+            duration: track.duration,
+            saved: true,
+          });
+          output.textContent = JSON.stringify(results, null, 2);
+        }
+        output.textContent =
+          "已完成。刷新播放器查看结果。\n" + JSON.stringify(results, null, 2);
+      } catch (error) {
+        output.textContent =
+          "验证失败：" +
+          error.message +
+          "\n" +
+          JSON.stringify(results, null, 2);
+      } finally {
+        setBusy(false);
+      }
+    });
+    document.querySelector("#cleanup").addEventListener("click", async () => {
+      const output = document.querySelector("#result");
+      setBusy(true);
+      output.textContent = "正在清理测试样本…";
+      try {
+        const ids = new Set();
+        for (const [name, type] of samples) {
+          const track = await readSample(name, type);
+          await deleteSavedTrack(track.id);
+          ids.add(track.id);
+        }
+        const favorites = readLocal("favorites", []);
+        if (Array.isArray(favorites)) {
+          writeLocal(
+            "favorites",
+            favorites.filter((id) => !ids.has(id)),
+          );
+        }
+        const years = readLocal("years", {});
+        if (years && typeof years === "object" && !Array.isArray(years)) {
+          for (const id of ids) delete years[id];
+          writeLocal("years", years);
+        }
+        output.textContent =
+          "已清理这五个测试样本及其测试收藏、年份修正。其他音乐和偏好保持不变。刷新播放器查看结果；需要重测时可再次收录。";
+      } catch (error) {
+        output.textContent = "清理未完成：" + error.message;
+      } finally {
+        setBusy(false);
+      }
+    });
+  </script>
+</html>
